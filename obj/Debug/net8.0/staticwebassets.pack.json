@@ -1,0 +1,25 @@
+{
+  "Files": [
+    {
+      "Id": "c:\\Users\\50588\\Desktop\\Cosas Aaron\\Cosas de la uni\\Codigos\\Sistema de monitoreo inteligente\\MonitoringPlatform\\wwwroot\\index.html",
+      "PackagePath": "staticwebassets\\index.html"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.MonitoringPlatform.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.MonitoringPlatform.props",
+      "PackagePath": "build\\MonitoringPlatform.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.MonitoringPlatform.props",
+      "PackagePath": "buildMultiTargeting\\MonitoringPlatform.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.MonitoringPlatform.props",
+      "PackagePath": "buildTransitive\\MonitoringPlatform.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

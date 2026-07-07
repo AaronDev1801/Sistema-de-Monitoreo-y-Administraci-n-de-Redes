@@ -1,0 +1,39 @@
+{
+  "Version": 1,
+  "Hash": "7h+Ahk7Gf34mT+4RGr6e8EYS92FxNJ9fovVfF9emqVM=",
+  "Source": "MonitoringPlatform",
+  "BasePath": "_content/MonitoringPlatform",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "MonitoringPlatform\\wwwroot",
+      "Source": "MonitoringPlatform",
+      "ContentRoot": "c:\\Users\\50588\\Desktop\\Cosas Aaron\\Cosas de la uni\\Codigos\\Sistema de monitoreo inteligente\\MonitoringPlatform\\wwwroot\\",
+      "BasePath": "_content/MonitoringPlatform",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "c:\\Users\\50588\\Desktop\\Cosas Aaron\\Cosas de la uni\\Codigos\\Sistema de monitoreo inteligente\\MonitoringPlatform\\wwwroot\\index.html",
+      "SourceId": "MonitoringPlatform",
+      "SourceType": "Discovered",
+      "ContentRoot": "c:\\Users\\50588\\Desktop\\Cosas Aaron\\Cosas de la uni\\Codigos\\Sistema de monitoreo inteligente\\MonitoringPlatform\\wwwroot\\",
+      "BasePath": "_content/MonitoringPlatform",
+      "RelativePath": "index.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\index.html"
+    }
+  ]
+}

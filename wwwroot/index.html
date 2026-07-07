@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Monitoreo Inteligente de Red</title>
+  <style>
+    :root { color-scheme: dark; }
+    body { font-family: Arial, sans-serif; margin: 0; background: #07111f; color: #e6f0ff; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+    .hero { background: linear-gradient(135deg, #0d1b2a, #1b4de5); padding: 24px; border-radius: 16px; margin-bottom: 20px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+    .card { background: #12233b; padding: 16px; border-radius: 14px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+    .pill { display: inline-block; padding: 5px 10px; border-radius: 999px; background: rgba(255,255,255,0.15); margin-bottom: 10px; font-size: 0.8rem; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { padding: 10px; text-align: left; border-bottom: 1px solid #26405d; }
+    .warning { color: #ffd166; }
+    .critical { color: #ff6b6b; }
+    button { background: #3b82f6; color: white; border: none; padding: 10px 14px; border-radius: 8px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="hero">
+      <h1>Sistema Inteligente de Monitoreo y Administración de Redes Empresariales</h1>
+      <p>Datos simulados cada 5 segundos mediante SNMP, Syslog y NetFlow para visualizar alertas en tiempo real.</p>
+      <button onclick="refreshData()">Actualizar</button>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="pill">Estado general</div>
+        <h2 id="statusText">Analizando red...</h2>
+        <p id="summaryText">Esperando lecturas...</p>
+      </div>
+      <div class="card">
+        <div class="pill">Alertas recientes</div>
+        <ul id="alertsList"></ul>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top: 20px;">
+      <h3>Últimas lecturas</h3>
+      <table>
+        <thead>
+          <tr><th>Dispositivo</th><th>Categoría</th><th>CPU</th><th>Memoria</th><th colspan="4">Datos específicos</th></tr>
+        </thead>
+        <tbody id="telemetryBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    function getDeviceColumns(category) {
+      const columns = {
+        "Routers": ["Tráfico In", "Tráfico Out", "Rutas", "Sospechosos"],
+        "Switches": ["Puertos", "Colisiones", "Congestión %", "Energía W"],
+        "Firewalls": ["Bloqueados", "Intrusiones", "Reglas", "Amenazas"],
+        "Access Points": ["Clientes", "Señal dBm", "Canales", "Interferencias"],
+        "Servidores": ["Disco %", "Disponibilidad %", "Accesos", "Fallos"],
+        "Equipos de usuarios": ["Antivirus %", "Parches", "Int. Acceso", "Fallos HW"],
+        "Sensores ambientales del cuarto de servidores": ["Temp °C", "Humedad %", "Flujo m³/h", "Consumo W"]
+      };
+      return columns[category] || ["Dato1", "Dato2", "Dato3", "Dato4"];
+    }
+
+    function getDeviceValues(item) {
+      if (!item.additionalData) return ["—", "—", "—", "—"];
+      const d = item.additionalData;
+      const map = {
+        "Routers": [d.traficoEntrante, d.traficoSaliente, d.rutasActivas, d.intentosSospechosos],
+        "Switches": [d.puertosActivos, d.colisiones, d.congestion, d.consumoEnergia],
+        "Firewalls": [d.accesosBloqueados, d.intentosIntrusión, d.reglasAplicadas, d.alertasAmenazas],
+        "Access Points": [d.clientesConectados, d.intensidadSenial, d.canalesUsados, d.interferencias],
+        "Servidores": [d.usoEmDisco, d.disponibilidadServicios, d.accesoUsuarios, d.fallosProcesos],
+        "Equipos de usuarios": [d.antivirus, d.parchesAplicados, d.intentosAcceso, d.fallosHardware],
+        "Sensores ambientales del cuarto de servidores": [d.temperatura, d.humedad, d.flujoAire, d.consumoElectrico]
+      };
+      return map[item.category] || ["—", "—", "—", "—"];
+    }
+
+    async function refreshData() {
+      const [telemetryRes, alertsRes] = await Promise.all([
+        fetch('/api/telemetry/recent?limit=10'),
+        fetch('/api/alerts/recent?limit=10')
+      ]);
+      const telemetry = await telemetryRes.json();
+      const alerts = await alertsRes.json();
+
+      const body = document.getElementById('telemetryBody');
+      body.innerHTML = telemetry.map(item => {
+        const cols = getDeviceColumns(item.category);
+        const vals = getDeviceValues(item);
+        return `<tr>
+          <td>${item.deviceName}</td>
+          <td>${item.category}</td>
+          <td>${item.cpuUsage.toFixed(1)}%</td>
+          <td>${item.memoryUsage.toFixed(1)}%</td>
+          <td>${cols[0]}: ${vals[0]}</td>
+          <td>${cols[1]}: ${vals[1]}</td>
+          <td>${cols[2]}: ${vals[2]}</td>
+          <td>${cols[3]}: ${vals[3]}</td>
+        </tr>`;
+      }).join('');
+
+      const alertsList = document.getElementById('alertsList');
+      alertsList.innerHTML = alerts.length ? alerts.map(alert => `<li class="${alert.severity}">${alert.title} - ${alert.deviceName}</li>`).join('') : '<li>No hay alertas</li>';
+
+      document.getElementById('statusText').textContent = alerts.length ? 'Se detectaron anomalías' : 'Red estable';
+      document.getElementById('summaryText').textContent = `${telemetry.length} lecturas cargadas • ${alerts.length} alertas activas`;
+    }
+
+    setInterval(refreshData, 5000);
+    refreshData();
+  </script>
+</body>
+</html>
